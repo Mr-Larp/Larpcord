@@ -27,7 +27,7 @@ const onLoad = () => {
 
 const onUnload = () => {
     if (unpatch) unpatch();
-    
+
     const socketMod = vendetta?.metro?.findByProps("getSocket");
     const socket = socketMod?.getSocket();
     if (socket) {
