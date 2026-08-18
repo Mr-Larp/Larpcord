@@ -5,7 +5,7 @@ export default {
   input: "LarpcordPlugins/index.js",
   output: {
     file: "dist/index.js",
-    format: "iife",
+    format: "cjs",
     strict: false
   },
   plugins: [
