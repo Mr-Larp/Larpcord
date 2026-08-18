@@ -1,18 +1,9 @@
-import { findByProps } from "@vendetta/metro";
-import { after } from "@vendetta/patcher";
-
 let unpatch;
 
-function reconnect() {
-    const socketMod = findByProps("getSocket");
-    const socket = socketMod?.getSocket();
-    if (!socket) return;
-
-    socket.sessionId = null;
-    socket.close(4000, "PlatformSpoofer reconnect");
-}
-
 export const onLoad = () => {
+    const { findByProps } = vendetta.metro;
+    const { after } = vendetta.patcher;
+
     const extraPropsMod = findByProps("getExtraProperties");
     if (extraPropsMod) {
         unpatch = after("getExtraProperties", extraPropsMod, (_, res) => {
@@ -26,10 +17,21 @@ export const onLoad = () => {
         });
     }
 
-    reconnect();
+    const socketMod = findByProps("getSocket");
+    const socket = socketMod?.getSocket();
+    if (socket) {
+        socket.sessionId = null;
+        socket.close(4000, "PlatformSpoofer reconnect");
+    }
 };
 
 export const onUnload = () => {
     if (unpatch) unpatch();
-    reconnect();
+    
+    const socketMod = vendetta?.metro?.findByProps("getSocket");
+    const socket = socketMod?.getSocket();
+    if (socket) {
+        socket.sessionId = null;
+        socket.close(4000, "PlatformSpoofer reconnect");
+    }
 };
