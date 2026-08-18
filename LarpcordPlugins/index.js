@@ -1,5 +1,5 @@
-const { findByProps } = vendetta.metro;
-const { after } = vendetta.patcher;
+import { findByProps } from "@vendetta/metro";
+import { after } from "@vendetta/patcher";
 
 let unpatch;
 
@@ -12,7 +12,7 @@ function reconnect() {
     socket.close(4000, "PlatformSpoofer reconnect");
 }
 
-export function onLoad() {
+export const onLoad = () => {
     const extraPropsMod = findByProps("getExtraProperties");
     if (extraPropsMod) {
         unpatch = after("getExtraProperties", extraPropsMod, (_, res) => {
@@ -27,11 +27,9 @@ export function onLoad() {
     }
 
     reconnect();
-}
+};
 
-export function onUnload() {
-    if (unpatch) {
-        unpatch();
-    }
+export const onUnload = () => {
+    if (unpatch) unpatch();
     reconnect();
-}
+};
